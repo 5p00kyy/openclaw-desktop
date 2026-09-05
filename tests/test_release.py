@@ -23,18 +23,18 @@ class ReleaseTests(unittest.TestCase):
         return json.loads((Path(__file__).parent / "fixtures" / name).read_text())
 
     def test_current_stable_release(self) -> None:
-        self.assertEqual(module.validate_release(self.fixture("current.json")), "2026.9.1")
+        self.assertEqual(module.validate_release(self.fixture("current.json")), "2026.9.2")
 
     def test_newer_stable_release(self) -> None:
         version = module.validate_release(self.fixture("newer.json"))
-        self.assertGreater(module.version_tuple(version), module.version_tuple("2026.9.1"))
+        self.assertGreater(module.version_tuple(version), module.version_tuple("2026.9.2"))
 
     def test_prerelease_is_rejected(self) -> None:
         with self.assertRaisesRegex(module.ReleaseError, "prereleases"):
             module.validate_release(self.fixture("prerelease.json"))
 
     def test_version_parser_is_strict(self) -> None:
-        for invalid in ("2026.9", "v2026.9.1", "2026.09.x"):
+        for invalid in ("2026.9", "v2026.9.2", "2026.09.x"):
             with self.subTest(invalid=invalid), self.assertRaises(module.ReleaseError):
                 module.version_tuple(invalid)
 
